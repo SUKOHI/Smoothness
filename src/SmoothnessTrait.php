@@ -72,10 +72,24 @@ trait SmoothnessTrait {
 		$results->values = $current_values;
 		$results->has_values = $current_has_values;
 		$results->has_columns = $has_columns;
-		$results->columns = $this->smoothness['columns'];
+		$results->columns = $this->getSmoothnessColumns();
 		$results->appends = (array)$current_values;
 		$results->condition = $condition;
 		View::Share('smoothness', $results);
+
+	}
+
+	private function getSmoothnessColumns() {
+
+		$columns = new \stdClass();
+
+		foreach ($this->smoothness['columns'] as $column => $label) {
+
+			$columns->$column = $label;
+
+		}
+
+		return $columns;
 
 	}
 
