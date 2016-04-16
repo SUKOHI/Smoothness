@@ -114,31 +114,6 @@ You can use this package with relationship using join().
 		]
 	];
 
-# Before filter (optional)
-
-You can set closure as the 3rd argument.  
-And it will be called before this package set ORDER BY clause.
-
-    $items = Item::smoothness('id', 'asc', function($smoothness){
-                                         
-                    // Get column & direction
-    
-                    $current_column = $smoothness->getSortColumn();
-                    $current_direction = $smoothness->getSortDirection();
-    
-                    // Set column & direction
-    
-                    $smoothness->setSortColumn('title');
-                    $smoothness->setSortDirection('desc');
-    
-    
-                    // Get DB query
-    
-                    $query = $smoothness->getQuery();
-    
-                })
-                ->paginate(5);
-
 # License
 
 This package is licensed under the MIT License.
