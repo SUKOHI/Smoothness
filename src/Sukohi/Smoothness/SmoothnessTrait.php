@@ -1,5 +1,6 @@
 <?php namespace Sukohi\Smoothness;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 
@@ -13,29 +14,26 @@ trait SmoothnessTrait {
 
 		}
 
-		$current_values = new \stdClass();
-		$current_has_values = new \stdClass();
-		$has_columns = [];
+		$current_values = $current_has_values = $has_keys = [];
 		$default_flag = true;
 
-		foreach ($this->smoothness['columns'] as $column => $label) {
+		foreach ($this->smoothness['columns'] as $key => $column) {
 
-			$under_bar_column = str_replace('.', '_', $column);
-			$value = Request::get($under_bar_column);
-			$current_values->$column = $value;
+			$value = Request::get($key);
+			$current_values[$key] = $value;
 
-			if(Request::exists($under_bar_column)) {
+			if(Request::exists($key)) {
 
 				$default_flag = false;
 
-				if(!Request::has($under_bar_column)) {
+				if(!Request::has($key)) {
 
 					continue;
 
 				}
 
-				$current_has_values->$column = $value;
-				$has_columns[] = $column;
+				$current_has_values[$key] = $value;
+				$has_keys[] = $key;
 
 				if(strpos($column, 'scope::') === 0) {
 
@@ -62,40 +60,33 @@ trait SmoothnessTrait {
 
 		}
 
-		if(!$default_flag && empty(implode('', (array)$current_values))) {
+		if(!$default_flag && empty(implode('', $current_values))) {
 
 			$query->whereRaw('1 <> 1');
 
 		}
 
 		$results = new \stdClass();
-		$results->values = $current_values;
-		$results->has_values = $current_has_values;
-		$results->has_columns = $has_columns;
-		$results->columns = $this->getSmoothnessColumns();
-		$results->appends = (array)$current_values;
+		$results->values = Collection::make($current_values);
+		$results->has_values = Collection::make($current_has_values);
+		$results->labels = $this->getSmoothnessLabels();
+		$results->has_keys = $has_keys;
+		$results->appends = $current_values;
 		$results->condition = $condition;
 		View::Share('smoothness', $results);
-
-	}
-
-	private function getSmoothnessColumns() {
-
-		$columns = new \stdClass();
-
-		foreach ($this->smoothness['columns'] as $column => $label) {
-
-			$columns->$column = $label;
-
-		}
-
-		return $columns;
 
 	}
 
 	private function getSmoothnessCondition() {
 
 		return $this->smoothness['condition'];
+
+	}
+
+	private function getSmoothnessLabels() {
+
+		$labels = array_get($this->smoothness, 'labels', []);
+		return Collection::make($labels);
 
 	}
 
