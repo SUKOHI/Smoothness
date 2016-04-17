@@ -1,6 +1,6 @@
 # Smoothness
 A Laravel package to manage WHERE clause.  
-(This is for Laravel 5+. [For Laravel 4.2](https://github.com/SUKOHI/Smoothness/tree/1.0))
+(This is for Laravel 5+. [For Laravel 4.2](https://github.com/SUKOHI/Smoothness/tree/3.0))
 
 [Demo](http://demo-laravel52.capilano-fw.com/smoothness)
 
@@ -8,7 +8,7 @@ A Laravel package to manage WHERE clause.
 
 Execute composer command.
 
-    composer require sukohi/smoothness:2.*
+    composer require sukohi/smoothness:4.*
 
 # Preparation
 
@@ -24,14 +24,20 @@ At first, set `SmoothnessTrait` in your Model.
 
 Secondary, add configuration values also in your Model.
 
-**columns:** Columns and Labels you want to use. (Required)  
+**columns:** keys and column names you want to use. (Required)  
+**labels:** Labels and keys you want to use. (Optional)  
 **condition:** Condition type which are and &amp; or (Optional, Default: and)  
 
 	protected $smoothness = [
 		'columns' => [
+			'search_id' => 'id',
+			'search_title' => 'title',
+			'search_date' => 'created_at'
+		],
+		'labels' => [
 			'id' => 'ID',
-			'title' => 'Title',
-			'created_at' => 'Date'
+			'title' => 'Item Title',
+			'search_date' => 'Date'
 		],
 		'condition' => 'and'
 	];
@@ -39,7 +45,7 @@ Secondary, add configuration values also in your Model.
 **Query Scope:** You also can utilize `Query Scopes` instead of column name.  
 
     'columns' => [
-        'scope::filterTitle' => 'LABEL'
+        'scope_title' => 'scope::filterTitle'
     ],
 
 in this case, you need to prepare a scope method in your model. ([About Query Scopes](https://laravel.com/docs/4.2/eloquent#query-scopes))
@@ -68,20 +74,28 @@ After call `smoothness()`, you can access to sort data through `$smoothness`.
     
 **values:** Submitted data.
     
-    @foreach($smoothness->values as $column => $value)
-        {{ $column }} => {{ $value }}
+    @foreach($smoothness->values as $key => $value)
+        <input type="text" name="{{ $key }}" value="{{ $value }}">
     @endforeach
+    
+    or
+        
+    $smoothness->values->get('KEY_NAME');
 
-**symbols:** Submitted data that has value. 
+**has_values:** Submitted data that has value. 
 
     @foreach($smoothness->has_values as $column => $value)
         {{ $column }} => {{ $value }}
     @endforeach
 
-**has_columns:** Array values of columns that has value.
+    or
+        
+    $smoothness->has_values->get('KEY_NAME');
 
-    @foreach($smoothness->columns as $column => $label)
-        {{ $label }}:<input type="text" name="{{ $column }}" value="{{ $smoothness->values->$column }}"><br>
+**labels:** Array values of columns that has value.
+
+    @foreach($smoothness->labels as $key => $label)
+        {{ $label }}
     @endforeach
 
 **appends:** Array values for pagination
