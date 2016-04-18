@@ -8,6 +8,16 @@ trait SmoothnessTrait {
 
 	public function scopeSmoothness($query, $condition = '') {
 
+		$query->where(function($inner_query) use($condition){
+
+			$this->smoothnessWhere($inner_query, $condition);
+
+		});
+
+	}
+
+	private function smoothnessWhere($query, $condition) {
+
 		$condition = $this->getSmoothnessCondition($condition);
 		$current_values = $current_has_values = $has_keys = [];
 		$default_flag = true;
