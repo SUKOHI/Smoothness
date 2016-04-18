@@ -116,6 +116,12 @@ After call `smoothness()`, you can access to sort data through `$smoothness`.
         {{ $label }}
     @endforeach
 
+**conditions:** Array values of columns that has value.
+
+    @foreach($smoothness->conditions as $key => $boolean)
+        <input type="radio" name="condition" value="{{ $key }}"{{ ($boolean) ? ' checked' : '' }}>{{ ($key == 'and') ? 'And' : 'Or' }}
+    @endforeach
+
 **appends:** Array values for pagination
   
     {{ $items->appends($smoothness->appends)->links() }}
