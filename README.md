@@ -26,7 +26,7 @@ Secondary, add configuration values also in your Model.
 
 **columns:** keys and column names you want to use. (Required)  
 **labels:** Labels and keys you want to use. (Optional)  
-**condition:** Condition type which are and &amp; or (Optional, Default: and)  
+**condition:** Condition type which are and &amp; or (Optional, Default: auto)  
 
 	protected $smoothness = [
 		'columns' => [
@@ -41,6 +41,8 @@ Secondary, add configuration values also in your Model.
 		],
 		'condition' => 'and'
 	];
+
+**Note:**  If you set `auto` in `condition`, you can change condition value through URL params like this.  
 
 **Query Scope:** You also can utilize `Query Scopes` instead of column name.  
 
@@ -96,6 +98,12 @@ After call `smoothness()`, you can access to sort data through `$smoothness`.
 
     @foreach($smoothness->labels as $key => $label)
         {{ $label }}
+    @endforeach
+
+**conditions:** Array values of columns that has value.
+
+    @foreach($smoothness->conditions as $key => $boolean)
+        <input type="radio" name="condition" value="{{ $key }}"{{ ($boolean) ? ' checked' : '' }}>{{ ($key == 'and') ? 'And' : 'Or' }}
     @endforeach
 
 **appends:** Array values for pagination
