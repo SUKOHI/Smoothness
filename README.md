@@ -26,7 +26,7 @@ Secondary, add configuration values also in your Model.
 
 **columns:** keys and column names you want to use. (Required)  
 **labels:** Labels and keys you want to use. (Optional)  
-**condition:** Condition type which are and &amp; or (Optional, Default: and)  
+**condition:** Condition type which are and &amp; or (Optional, Default: auto)  
 
 	protected $smoothness = [
 		'columns' => [
@@ -42,6 +42,10 @@ Secondary, add configuration values also in your Model.
 		'condition' => 'and'
 	];
 
+**Note:**  If you set `auto` in `condition`, you can change condition value through URL params like this.  
+
+    http://example.com/test?condition=or
+
 **Query Scope:** You also can utilize `Query Scopes` instead of column name.  
 
     'columns' => [
@@ -51,6 +55,20 @@ Secondary, add configuration values also in your Model.
 in this case, you need to prepare a scope method in your model. ([About Query Scopes](https://laravel.com/docs/4.2/eloquent#query-scopes))
     
     public function scopeFilterTitle($query, $value) {
+
+        return $query->where('title', $value);
+
+    }
+    
+    or you also can get condition value at the same time.
+    
+    public function scopeFilterTitle($query, $value, $condition) {
+
+        if($condition == 'or') {
+        
+            return $query->orWhere('title', $value);
+        
+        }
 
         return $query->where('title', $value);
 

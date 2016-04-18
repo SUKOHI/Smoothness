@@ -8,12 +8,7 @@ trait SmoothnessTrait {
 
 	public function scopeSmoothness($query, $condition = '') {
 
-		if(empty($condition)) {
-
-			$condition = $this->getSmoothnessCondition();
-
-		}
-
+		$condition = $this->getSmoothnessCondition($condition);
 		$current_values = $current_has_values = $has_keys = [];
 		$default_flag = true;
 
@@ -41,7 +36,7 @@ trait SmoothnessTrait {
 
 					if(method_exists($this, $method)) {
 
-						$this->$method($query, $value);
+						$this->$method($query, $value, $condition);
 
 					} else {
 
@@ -73,13 +68,35 @@ trait SmoothnessTrait {
 		$results->has_keys = $has_keys;
 		$results->appends = $current_values;
 		$results->condition = $condition;
+		$results->conditions = $this->getSmoothnessConditions($condition);
 		View::Share('smoothness', $results);
 
 	}
 
-	private function getSmoothnessCondition() {
+	private function getSmoothnessCondition($condition) {
 
-		return $this->smoothness['condition'];
+		if(!isset($this->smoothness['condition']) || $this->smoothness['condition'] == 'auto') {
+
+			$condition = Request::get('condition');
+
+		}
+
+		if(!in_array($condition, ['and', 'or'])) {
+
+			$condition = 'and';
+
+		}
+
+		return $condition;
+
+	}
+
+	private function getSmoothnessConditions($condition) {
+
+		return Collection::make([
+			'and' => ($condition == 'and'),
+			'or' => ($condition == 'or')
+		]);
 
 	}
 
