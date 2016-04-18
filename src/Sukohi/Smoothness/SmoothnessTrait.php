@@ -55,7 +55,7 @@ trait SmoothnessTrait {
 
 		}
 
-		if(!$default_flag && strlen(implode('', $current_values))) {
+		if(!$default_flag && strlen(implode('', $current_values)) == 0) {
 
 			$query->whereRaw('1 <> 1');
 
