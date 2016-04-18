@@ -35,8 +35,8 @@ Secondary, add configuration values also in your Model.
 			'search_date' => 'created_at'
 		],
 		'labels' => [
-			'id' => 'ID',
-			'title' => 'Item Title',
+			'search_id' => 'ID',
+			'search_title' => 'Item Title',
 			'search_date' => 'Date'
 		],
 		'condition' => 'and'
