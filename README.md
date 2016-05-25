@@ -14,7 +14,7 @@ Execute composer command.
 
 At first, set `SmoothnessTrait` in your Model.
 
-    use Sukohi\smoothness\SmoothnessTrait;
+    use Sukohi\Smoothness\SmoothnessTrait;
     
     class Item extends Eloquent {
     
