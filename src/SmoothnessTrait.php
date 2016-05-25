@@ -71,12 +71,14 @@ trait SmoothnessTrait {
 
 		}
 
+		$appends = array_merge($current_values, ['condition' => $condition]);
+
 		$results = new \stdClass();
 		$results->values = Collection::make($current_values);
 		$results->has_values = Collection::make($current_has_values);
 		$results->labels = $this->getSmoothnessLabels();
 		$results->has_keys = $has_keys;
-		$results->appends = $current_values;
+		$results->appends = $appends;
 		$results->condition = $condition;
 		$results->conditions = $this->getSmoothnessConditions($condition);
 		View::Share('smoothness', $results);
