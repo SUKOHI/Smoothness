@@ -115,6 +115,27 @@ trait SmoothnessTrait {
 	private function getSmoothnessLabels() {
 
 		$labels = array_get($this->smoothness, 'labels', []);
+
+		foreach ($labels as $key => $label) {
+
+			if(starts_with($label, 'label::')) {
+
+				$method = camel_case(str_replace('::', '_', $label));
+
+				if(method_exists($this, $method)) {
+
+					$labels[$key] = $this->$method();
+
+				} else {
+
+					throw new \Exception('Method '. $method .'() Not Found.');
+
+				}
+
+			}
+
+		}
+
 		return Collection::make($labels);
 
 	}

@@ -58,6 +58,22 @@ in this case, you need to prepare a scope method in your model. ([About Query Sc
 
     }
 
+**Label** You can use `label::` prefix to call a specific method.
+
+    'labels' => [
+        'title' => 'label::filterTitle'
+    ],
+    
+in this case, you need to prepare a method in your model.  
+
+    public function labelFilterTitle() {
+
+        return 'Your Title'.
+
+    }
+    
+(You may use this tip for switching locale and so on.)
+
 # Usage
 
 Now you can use a method called `smoothness`.
